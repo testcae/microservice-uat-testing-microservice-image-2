@@ -95,7 +95,7 @@ public class uatTestImage extends RESTService {
    * 
    *
    * 
-   * @return Response 
+   * @return Response Response get image
    * 
    */
   @GET
@@ -103,30 +103,18 @@ public class uatTestImage extends RESTService {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.TEXT_PLAIN)
   @ApiResponses(value = {
-       @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "responseGetImage")
+       @ApiResponse(code = HttpURLConnection.HTTP_OK, message = "Response get image")
   })
   @ApiOperation(value = "getImage", notes = " ")
   public Response getImage() {
 
-    try { 
-        Connection conn = service.dbm.getConnection();
-        PreparedStatement query = conn.prepareStatement("SELECT * FROM uatTest.tblImage");
-        ResultSet result = query.executeQuery();
-        JSONArray jsonResult = new JSONArray();
-        while(result.next()) {
-          classes.image imageResult = new classes().new image();
-          imageResult.setimageName(result.getString("imageName"));
-          imageResult.setimageUrl(result.getString("imageUrl"));
-          imageResult.setimageId(result.getInt("imageId"));
-          jsonResult.add(imageResult.toJSON());
-        }
-        // responseGetImage
-        return Response.status(HttpURLConnection.HTTP_OK).entity(jsonResult.toJSONString()).build();
-    } catch(Exception e) {
-      e.printStackTrace();
-      JSONObject result = new JSONObject(); 
-      return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(result.toJSONString()).build();
+    // responseGetImage
+    boolean responseGetImage_condition = true;
+    if(responseGetImage_condition) {
+      JSONObject resultGetImage = new classes().new image().toJSON();
+      return Response.status(HttpURLConnection.HTTP_OK).entity(resultGetImage.toJSONString()).build();
     }
+    return null;
   }
 
   /**
@@ -134,7 +122,7 @@ public class uatTestImage extends RESTService {
    * postImage
    *
    * 
-   * @param payloadPostImage  a JSONObject
+   * @param payloadPostImage Payload Post Image a JSONObject
    * 
    * @return Response 
    * 
@@ -148,8 +136,14 @@ public class uatTestImage extends RESTService {
   })
   @ApiOperation(value = "postImage", notes = " ")
   public Response postImage(String payloadPostImage) {
-    JSONObject payloadPostImage_JSON = (JSONObject) JSONValue.parse(payloadPostImage);
-
+   classes.image payloadpayloadPostImageObject = new classes().new image();
+   try { 
+       payloadpayloadPostImageObject.fromJSON(payloadPostImage);
+   } catch (Exception e) { 
+       e.printStackTrace();
+       JSONObject result = new JSONObject();
+       return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity("Cannot convert json to object").build();
+   }
     // responsePostImage
     boolean responsePostImage_condition = true;
     if(responsePostImage_condition) {
